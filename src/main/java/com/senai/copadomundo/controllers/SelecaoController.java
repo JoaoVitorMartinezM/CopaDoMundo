@@ -47,4 +47,33 @@ public class SelecaoController {
         }
         return ResponseEntity.status(201).body(services.save(selecao));
     }
+
+    @PutMapping(value = "/sigla{sigla}", name = "Put Selecao")
+    public ResponseEntity<Selecao> edit(@RequestParam String sigla, @RequestBody Selecao selecao){
+        if (!services.existsBySigla(sigla)){
+            return ResponseEntity.notFound().build();
+        }
+
+        if (selecao.getNome().equals("") || selecao.getSigla().equals("")){
+            ResponseEntity.status(400).body(null);
+            throw new SelecaoBadRequest("Não é possível gravar uma seleção com nome ou sigla nulos");
+        }
+
+        if (services.edit(sigla, selecao) == null){
+            throw new SelecaoConflict("Objeto não pode ser editado para evitar duplicidade e integridade do banco de dados");
+
+        }
+        return ResponseEntity.ok(services.edit(sigla, selecao));
+    }
+
+    @DeleteMapping(value = "/sigla{sigla}", name = "Delete Selecao")
+    public ResponseEntity<String> delete(@RequestParam String sigla){
+        if (!services.existsBySigla(sigla)){
+            return ResponseEntity.notFound().build();
+        }
+        services.delete(sigla);
+
+        return ResponseEntity.status(204).body("Seleção excluída do banco de dados com sucesso.");
+    }
+
 }

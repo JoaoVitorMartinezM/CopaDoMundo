@@ -35,6 +35,26 @@ public class SelecaoService {
     }
 
     public Selecao getById(String id) {
-        return selecaoRepository.findById(id).get();
+        return selecaoRepository.findBySiglaIgnoreCase(id);
+    }
+
+    public Selecao edit(String sigla, Selecao selecao) {
+
+        if (!existsBySigla(selecao.getSigla().toUpperCase())) {
+            Selecao selecaoEditada = selecaoRepository.findBySiglaIgnoreCase(sigla);
+
+            selecaoEditada.setSigla(selecao.getSigla().toUpperCase());
+            selecaoEditada.setNome(selecao.getNome());
+            selecaoEditada.setGrupo(selecao.getGrupo());
+
+            return selecaoRepository.save(selecaoEditada);
+        }
+        return null;
+
+
+    }
+
+    public void delete(String sigla) {
+        selecaoRepository.deleteById(sigla.toUpperCase());
     }
 }

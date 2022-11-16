@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface SelecaoRepository extends JpaRepository<Selecao, String> {
 
     Boolean existsBySiglaIgnoreCase(String sigla);
+
+    Selecao findBySiglaIgnoreCase(String sigla);
 }
