@@ -33,8 +33,5 @@ public class Selecao {
     @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "selecao", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Jogador> jogadores = new ArrayList<>();
+
 }

@@ -59,10 +59,6 @@ public class SelecaoController {
             throw new SelecaoBadRequest("Não é possível gravar uma seleção com nome ou sigla nulos");
         }
 
-        if (services.edit(sigla, selecao) == null){
-            throw new SelecaoConflict("Objeto não pode ser editado para evitar duplicidade e integridade do banco de dados");
-
-        }
         return ResponseEntity.ok(services.edit(sigla, selecao));
     }
 

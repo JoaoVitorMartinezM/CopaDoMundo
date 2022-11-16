@@ -40,17 +40,14 @@ public class SelecaoService {
 
     public Selecao edit(String sigla, Selecao selecao) {
 
-        if (!existsBySigla(selecao.getSigla().toUpperCase())) {
-            Selecao selecaoEditada = selecaoRepository.findBySiglaIgnoreCase(sigla);
 
-            selecaoEditada.setSigla(selecao.getSigla().toUpperCase());
-            selecaoEditada.setNome(selecao.getNome());
-            selecaoEditada.setGrupo(selecao.getGrupo());
+        Selecao selecaoEditada = selecaoRepository.findBySiglaIgnoreCase(sigla);
 
-            return selecaoRepository.save(selecaoEditada);
-        }
-        return null;
+        selecaoEditada.setSigla(sigla.toUpperCase());
+        selecaoEditada.setNome(selecao.getNome());
+        selecaoEditada.setGrupo(selecao.getGrupo());
 
+        return selecaoRepository.save(selecaoEditada);
 
     }
 
