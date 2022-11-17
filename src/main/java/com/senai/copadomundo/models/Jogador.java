@@ -17,6 +17,7 @@ import javax.persistence.*;
 public class Jogador {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false, length = 50)
@@ -25,7 +26,7 @@ public class Jogador {
     @Enumerated(EnumType.STRING)
     private Posicao posicao;
 
-    @ManyToOne
+    @ManyToOne(targetEntity =  Selecao.class)
     private Selecao selecao;
 
 
