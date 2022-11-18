@@ -1,5 +1,6 @@
 package com.senai.copadomundo.controllers;
 
+import com.senai.copadomundo.dto.SelecaoResponse;
 import com.senai.copadomundo.exceptions.SelecaoBadRequest;
 import com.senai.copadomundo.exceptions.SelecaoConflict;
 import com.senai.copadomundo.models.Selecao;
@@ -9,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,14 +22,21 @@ public class SelecaoController {
     private ModelMapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<Selecao>> get(){
-        return  ResponseEntity.ok(services.get());
+    public ResponseEntity<List<SelecaoResponse>> get(){
+        List<Selecao> lista = services.get();
+        List<SelecaoResponse> listaMapeada = new ArrayList<>();
+        for (Selecao selecao : lista) {
+            listaMapeada.add(mapper.map(selecao, SelecaoResponse.class));
+        }
+        return  ResponseEntity.ok(listaMapeada);
     }
 
     @GetMapping(value = "/sigla{sigla}")
-    public ResponseEntity<Selecao> getById(@RequestParam String sigla){
+    public ResponseEntity<SelecaoResponse> getById(@RequestParam String sigla){
         if (services.existsBySigla(sigla)){
-            return  ResponseEntity.ok(services.getById(sigla));
+            Selecao selecao = services.getById(sigla);
+            SelecaoResponse response = mapper.map(selecao, SelecaoResponse.class);
+            return  ResponseEntity.ok(response);
 
         }
         return ResponseEntity.notFound().build();
