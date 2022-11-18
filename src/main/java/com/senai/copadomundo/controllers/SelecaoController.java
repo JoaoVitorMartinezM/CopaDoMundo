@@ -1,5 +1,6 @@
 package com.senai.copadomundo.controllers;
 
+import com.senai.copadomundo.dto.SelecaoRequest;
 import com.senai.copadomundo.dto.SelecaoResponse;
 import com.senai.copadomundo.exceptions.SelecaoBadRequest;
 import com.senai.copadomundo.exceptions.SelecaoConflict;
@@ -46,7 +47,8 @@ public class SelecaoController {
 
 
     @PostMapping(value = "/novo", name = "Post Selecao")
-    public ResponseEntity<Selecao> save(@RequestBody Selecao selecao){
+    public ResponseEntity<SelecaoResponse> save(@RequestBody SelecaoRequest request){
+        Selecao selecao = mapper.map(request, Selecao.class);
         if (services.existsBySigla(selecao.getSigla())){
             ResponseEntity.status(409).body(null);
             throw new SelecaoConflict("Seleção já existente no banco de dados");
@@ -56,21 +58,29 @@ public class SelecaoController {
             ResponseEntity.status(400).body(null);
             throw new SelecaoBadRequest("Não é possível gravar uma seleção com nome ou sigla nulos");
         }
-        return ResponseEntity.status(201).body(services.save(selecao));
+        Selecao selecaoBD = services.save(selecao);
+
+        SelecaoResponse response = mapper.map(selecaoBD, SelecaoResponse.class);
+
+        return ResponseEntity.status(201).body(response);
     }
 
     @PutMapping(value = "/sigla{sigla}", name = "Put Selecao")
-    public ResponseEntity<Selecao> edit(@RequestParam String sigla, @RequestBody Selecao selecao){
+    public ResponseEntity<SelecaoResponse> edit(@RequestParam String sigla, @RequestBody SelecaoRequest request){
+        Selecao selecao = mapper.map(request, Selecao.class);
         if (!services.existsBySigla(sigla)){
             return ResponseEntity.notFound().build();
         }
 
-        if (selecao.getNome().equals("") || selecao.getSigla().equals("")){
+        if (selecao.getNome().equals("") || sigla.equals("")){
             ResponseEntity.status(400).body(null);
             throw new SelecaoBadRequest("Não é possível gravar uma seleção com nome ou sigla nulos");
         }
+        Selecao selecaoEditadaBD = services.edit(sigla, selecao);
 
-        return ResponseEntity.ok(services.edit(sigla, selecao));
+        SelecaoResponse response = mapper.map(selecaoEditadaBD, SelecaoResponse.class);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(value = "/sigla{sigla}", name = "Delete Selecao")
