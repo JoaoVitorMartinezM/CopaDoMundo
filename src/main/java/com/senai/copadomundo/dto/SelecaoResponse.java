@@ -1,4 +1,4 @@
 package com.senai.copadomundo.dto;
 
-public class JogadorDTO {
+public class SelecaoResponse {
 }

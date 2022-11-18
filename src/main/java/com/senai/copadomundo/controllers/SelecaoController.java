@@ -5,6 +5,7 @@ import com.senai.copadomundo.exceptions.SelecaoConflict;
 import com.senai.copadomundo.models.Selecao;
 import com.senai.copadomundo.services.SelecaoService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class SelecaoController {
 
     private SelecaoService services;
+    private ModelMapper mapper;
 
     @GetMapping
     public ResponseEntity<List<Selecao>> get(){
