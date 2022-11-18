@@ -12,6 +12,5 @@ public class JogadorRequest {
 
     private Posicao posicao;
 
-    private Selecao selecao;
 
 }
