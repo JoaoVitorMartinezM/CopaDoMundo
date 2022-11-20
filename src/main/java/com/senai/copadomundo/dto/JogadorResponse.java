@@ -7,10 +7,12 @@ import lombok.Data;
 @Data
 public class JogadorResponse {
 
+    private Integer id;
+
     private String nome;
 
     private Posicao posicao;
 
-    private Selecao selecao;
+
 
 }

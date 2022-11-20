@@ -2,7 +2,9 @@ package com.senai.copadomundo.controllers;
 
 import com.senai.copadomundo.dto.JogadorRequest;
 import com.senai.copadomundo.dto.JogadorResponse;
+import com.senai.copadomundo.dto.SelecaoResponse;
 import com.senai.copadomundo.models.Jogador;
+import com.senai.copadomundo.models.Selecao;
 import com.senai.copadomundo.services.JogadorService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -49,8 +52,18 @@ public class JogadorController {
     }
 
     @GetMapping(value = "/",name = "Get Jogadores por Seleção")
-    public ResponseEntity<List<Jogador>> getBySelecao(@PathVariable String sigla){
-        List<Jogador> jogadores = service.get(sigla);
-        return ResponseEntity.ok(jogadores);
+    public ResponseEntity<List<JogadorResponse>> getBySelecao(@PathVariable String sigla){
+        List<Jogador> lista = service.get();
+        List<JogadorResponse> listaResponseMapeada = lista.stream().map(jogador -> mapper.map(jogador, JogadorResponse.class)).collect(Collectors.toList());
+        return ResponseEntity.ok(listaResponseMapeada);
+    }
+
+    @DeleteMapping(value = "/{id}", name = "Delete Jogador")
+    public ResponseEntity<String> delete(@PathVariable("sigla") String sigla, @PathVariable("id") Integer id){
+        if (!service.delete(id, sigla)){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.status(204).body("Seleção excluída do banco de dados com sucesso.");
     }
 }

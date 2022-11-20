@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -35,5 +36,14 @@ public class JogadorService {
     public List<Jogador> get(String sigla) {
         Selecao selecao = selecaoRepository.findBySiglaIgnoreCase(sigla);
         return jogadoresRepository.findAllBySelecao(selecao);
+    }
+
+    public boolean delete(Integer id, String sigla) {
+        Optional<Selecao> selecao = selecaoRepository.findById(sigla);
+        if(jogadoresRepository.existsBySelecaoAndId(selecao.get(), id)){
+            jogadoresRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }
