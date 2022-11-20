@@ -11,4 +11,7 @@ import java.util.List;
 public interface JogadoresRepository extends JpaRepository<Jogador, Integer> {
 
     List<Jogador> findAllBySelecao(Selecao selecao);
+
+    Boolean existsByNome(String nome);
+
 }

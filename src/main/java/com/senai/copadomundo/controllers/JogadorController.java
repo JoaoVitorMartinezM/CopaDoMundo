@@ -23,11 +23,22 @@ public class JogadorController {
     public ResponseEntity<JogadorResponse> save( @PathVariable("sigla") String sigla, @RequestBody JogadorRequest request){
         Jogador jogador = mapper.map(request, Jogador.class);
 
+        if (jogador.getNome() == null || jogador.getPosicao() == null){
+            return ResponseEntity.badRequest().body(null);
+        }
+
         Jogador jogadorBD = service.save(jogador, sigla);
+
+        if (jogadorBD == null){
+            return ResponseEntity.status(409).body(null);
+        }
+
+
         JogadorResponse response = mapper.map(jogadorBD, JogadorResponse.class);
 
 
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.status(201).body(response);
 
     }
 

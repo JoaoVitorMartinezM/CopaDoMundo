@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/selecoes", name = "Endpoints Selecao")
@@ -25,11 +26,9 @@ public class SelecaoController {
     @GetMapping
     public ResponseEntity<List<SelecaoResponse>> get(){
         List<Selecao> lista = services.get();
-        List<SelecaoResponse> listaMapeada = new ArrayList<>();
-        for (Selecao selecao : lista) {
-            listaMapeada.add(mapper.map(selecao, SelecaoResponse.class));
-        }
-        return  ResponseEntity.ok(listaMapeada);
+        List<SelecaoResponse> listaResponseMapeada = lista.stream().map(selecao -> mapper.map(selecao, SelecaoResponse.class)).collect(Collectors.toList());
+
+        return  ResponseEntity.ok(listaResponseMapeada);
     }
 
     @GetMapping(value = "/sigla{sigla}")
@@ -88,6 +87,7 @@ public class SelecaoController {
         if (!services.existsBySigla(sigla)){
             return ResponseEntity.notFound().build();
         }
+
         services.delete(sigla);
 
         return ResponseEntity.status(204).body("Seleção excluída do banco de dados com sucesso.");

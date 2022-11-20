@@ -20,6 +20,11 @@ public class JogadorService {
 
     public Jogador save(Jogador jogador, String sigla) {
         jogador.setSelecao(selecaoRepository.findBySiglaIgnoreCase(sigla));
+
+        if (jogadoresRepository.existsByNome(jogador.getNome())){
+            return null;
+        }
+
         return jogadoresRepository.save(jogador);
     }
 

@@ -1,13 +1,11 @@
 package com.senai.copadomundo.services;
 
+import com.senai.copadomundo.models.Jogador;
 import com.senai.copadomundo.models.Selecao;
 import com.senai.copadomundo.repositories.JogadoresRepository;
 import com.senai.copadomundo.repositories.SelecaoRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
@@ -52,6 +50,9 @@ public class SelecaoService {
     }
 
     public void delete(String sigla) {
+        Selecao selecao = selecaoRepository.findById(sigla.toUpperCase()).get();
+        List<Jogador> jogadores = jogadoresRepository.findAllBySelecao(selecao);
+        jogadoresRepository.deleteAll(jogadores);
         selecaoRepository.deleteById(sigla.toUpperCase());
     }
 }
